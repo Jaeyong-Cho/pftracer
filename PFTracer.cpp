@@ -1,14 +1,15 @@
 #include "pin.H"
 #include <fstream>
 #include <iostream>
-#include <unordered_map>
+#include <strstream>
+#include <map>
 
 KNOB< std::string > KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "trace", "specify file name for output");
 
-std::unordered_map<THREADID, std::ofstream> output;
-std::unordered_map<ADDRINT, std::string> routine_name;
-std::unordered_map<ADDRINT, std::string> routine_file;
-std::unordered_map<ADDRINT, INT> routine_line;
+std::map<THREADID, std::ofstream> output;
+std::map<ADDRINT, std::string> routine_name;
+std::map<ADDRINT, std::string> routine_file;
+std::map<ADDRINT, INT> routine_line;
 
 INT32 Usage()
 {
@@ -53,7 +54,10 @@ VOID Routine(RTN rtn, VOID* v)
 
 VOID ThreadStart(THREADID threadid, CONTEXT* ctxt, INT32 flags, VOID* v) 
 { 
-    std::string output_file = KnobOutputFile.Value() + "." + std::to_string(PIN_GetPid());
+    std::stringstream ss;
+    ss << PIN_GetPid();
+    std::string pid_str = ss.str();
+    std::string output_file = KnobOutputFile.Value() + "." + pid_str;
     output[threadid].open(output_file.c_str());
 }
 
@@ -69,7 +73,10 @@ VOID ForkBefore(THREADID threadid, const CONTEXT *ctxt, VOID *v)
 VOID ForkAfterInChild(THREADID threadid, const CONTEXT *ctxt, VOID *v)
 {
     output.clear();
-    std::string output_file = KnobOutputFile.Value() + "." + std::to_string(PIN_GetPid());
+    std::stringstream ss;
+    ss << PIN_GetPid();
+    std::string pid_str = ss.str();
+    std::string output_file = KnobOutputFile.Value() + "." + pid_str;
     output[threadid].open(output_file.c_str());
 }
 
