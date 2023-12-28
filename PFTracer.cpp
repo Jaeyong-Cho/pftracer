@@ -1,15 +1,15 @@
 #include "pin.H"
 #include <fstream>
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #define MAX_THREAD_NUM 1000
 
 KNOB< std::string > KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "trace", "specify file name for output");
 
 std::ofstream output[MAX_THREAD_NUM];
-std::unordered_map<ADDRINT, std::string> routine_name;
-std::unordered_map<ADDRINT, std::string> routine_file;
-std::unordered_map<ADDRINT, INT> routine_line;
+std::map<ADDRINT, std::string> routine_name;
+std::map<ADDRINT, std::string> routine_file;
+std::map<ADDRINT, INT> routine_line;
 
 INT32 Usage()
 {
