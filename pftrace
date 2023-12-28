@@ -4,14 +4,15 @@ if [ -z "$1" ] ; then
     echo "ERROR: Target app not supplied."
 
     echo "Pin based function tracer"
-    echo "Usage: pftrace <target_app>"
+    echo "Usage: pftrace <target_app> <app_options>"
     exit
 fi
 
 TARGET_APP=$1
+TARGET_OPTIONS=${@:2}
 
 PIN_DIR="$HOME/pin/"
 PIN_TOOLS_DIR="$PIN_DIR/source/tools/PFTracer/obj-intel64"
 PINTOOL64="$PIN_TOOLS_DIR/PFTracer.so"
 
-$PIN_DIR/pin -t "$PINTOOL64" -- "$TARGET_APP"
+$PIN_DIR/pin -t "$PINTOOL64" -- "$TARGET_APP" "$TARGET_OPTIONS"
